@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Data Visualization App</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+</head>
+<body>
+    <div class="container">
+        <h1 class="main-title">CSV Data Visualization</h1>
+        <form action="/upload" method="post" enctype="multipart/form-data">
+            <input type="file" name="file" required>
+            <input type="submit" value="Upload CSV">
+        </form>
+        
+        {% if preview %}
+            <h2 class="section-title">Dataset Preview</h2>
+            <div class="table-container">{{ preview|safe }}</div>
+        {% endif %}
+        
+        {% if stats %}
+            <h2 class="section-title">Descriptive Statistics</h2>
+            <div class="table-container">{{ stats|safe }}</div>
+        {% endif %}
+        
+        {% if columns %}
+            <h2 class="section-title">Create a Visualization</h2>
+            <form action="/visualize" method="post" class="visualization-form">
+                <input type="hidden" name="filename" value="{{ filename }}">
+                <label for="x_column">X-axis:</label>
+                <select name="x_column" required>
+                    {% for column in columns %}
+                        <option value="{{ column }}">{{ column }}</option>
+                    {% endfor %}
+                </select>
+                <label for="y_column">Y-axis:</label>
+                <select name="y_column" required>
+                    {% for column in columns %}
+                        <option value="{{ column }}">{{ column }}</option>
+                    {% endfor %}
+                </select>
+                <label for="graph_type">Graph Type:</label>
+                <select name="graph_type" required>
+                    <option value="scatter">Scatter Plot</option>
+                    <option value="line">Line Chart</option>
+                    <option value="bar">Bar Graph</option>
+                </select>
+                <input type="submit" value="Generate Graph">
+            </form>
+        {% endif %}
+        
+        {% if graph %}
+            <h2 class="section-title">Data Visualization</h2>
+            <div class="graph-container">
+                {{ graph|safe }}
+            </div>
+        {% endif %}
+    </div>
+    
+    <footer>
+         Visualization App | Made by Adil HABIB and Ilyass BENNANI
+    </footer>
+</body>
+</html>
+
